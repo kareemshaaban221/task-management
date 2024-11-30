@@ -11,17 +11,27 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 
     public function getForUserPaginated($userId, $pageSize = 10): Paginator
     {
-        return $this->model->where('user_id', $userId)->latest('due_date')->paginate($pageSize);
+        return $this->model
+            ->where('user_id', $userId)
+            ->latest('due_date')
+            ->filter(request('filters', []))
+            ->paginate($pageSize);
     }
 
     public function getForUser($userId): Collection
     {
-        return $this->model->where('user_id', $userId)->latest('due_date')->get();
+        return $this->model
+            ->where('user_id', $userId)
+            ->latest('due_date')
+            ->filter(request('filters', []))
+            ->get();
     }
 
     public function findOrFailForUser($userId, $taskId): Task
     {
-        return $this->model->where('user_id', $userId)->findOrFail($taskId);
+        return $this->model
+            ->where('user_id', $userId)
+            ->findOrFail($taskId);
     }
 
     public function createForUser($userId, array $data): Task
@@ -34,10 +44,10 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
     {
         $data['user_id'] = $userId;
         return $this->updateWhere(
-            $taskId,
-            $data,
-            [['user_id', '=', $userId]]
-        )->fresh();
+                $taskId,
+                $data,
+                [['user_id', '=', $userId]]
+            )->fresh();
     }
 
 }
