@@ -17,7 +17,11 @@ Route::prefix('v1')
 ->name('v1.')
 ->group(function () {
 
-    require_once __DIR__ . '/api.users.php';
+    require_once __DIR__ . '/api.auth.php';
     require_once __DIR__ . '/api.tasks.php';
+
+    Route::get('up', function () {
+        return response()->json(['status' => 'UP']);
+    });
 
 });
