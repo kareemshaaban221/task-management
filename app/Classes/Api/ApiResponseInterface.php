@@ -22,10 +22,11 @@ interface ApiResponseInterface
 {
 
     public function successResponse($data, $code = 200, $message = "Success");
-    public function errorResponse($errors, $code = 400, $message = "Error");
+    public function clientErrorResponse($errors, $code = 400, $message = "Error");
+    public function serverErrorResponse($errors, $code = 500, $message = "Error");
     public function okResponse($data, $message = "Success");
     public function paginatedResponse(PaginationResource $resource, $code = 200, $message = "Success");
     public function createdResponse($data, $message = "Created");
-    public function notFoundResponse($data = [], $message = "Not Found");
+    public function notFoundResponse($errors = [], $message = "Not Found");
 
 }

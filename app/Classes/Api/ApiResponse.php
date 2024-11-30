@@ -18,7 +18,7 @@ use App\Http\Resources\Api\PaginationResource;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiResponse
+class ApiResponse implements ApiResponseInterface
 {
 
     protected $status;
@@ -76,6 +76,13 @@ class ApiResponse
         return response()->json(self::build($this), $code);
     }
 
+    /**
+     * Build a client error (4xx) API response.
+     *
+     * @param array $errors Validation errors or any other error messages.
+     * @param int $code HTTP status code.
+     * @return JsonResponse|mixed
+     */
     public function clientErrorResponse($errors, $code = 400, $message = "Error")
     {
         $this->errors = $errors;
@@ -85,6 +92,14 @@ class ApiResponse
         return response()->json(self::build($this), $code);
     }
 
+    /**
+     * Build a server error (5xx) API response.
+     *
+     * @param array $errors Error messages or details.
+     * @param int $code HTTP status code, defaults to 500.
+     * @param string $message Error message, defaults to "Error".
+     * @return JsonResponse|mixed
+     */
     public function serverErrorResponse($errors, $code = 500, $message = "Error")
     {
         $this->errors = $errors;
@@ -137,9 +152,16 @@ class ApiResponse
     // ----------------------------------
     // Client Error Methods
     // ----------------------------------
-    public function notFoundResponse($data = [], $message = "Not Found")
+    /**
+     * Build an HTTP 404 Not Found client error response.
+     *
+     * @param array $errors Errors to be returned in the response.
+     * @param string $message Error message to be returned in the response.
+     * @return JsonResponse|mixed
+     */
+    public function notFoundResponse($errors = [], $message = "Not Found")
     {
-        return $this->clientErrorResponse($data, Response::HTTP_NOT_FOUND, $message);
+        return $this->clientErrorResponse($errors, Response::HTTP_NOT_FOUND, $message);
     }
 
 }
