@@ -5,7 +5,7 @@ return [
     'users' => [
         'default' => [
             'name'  => 'Test User',
-            'email' => 'kareem.shaaban@brightcreations.com',
+            'email' => 'test@example.com',
         ],
         'count' => 10,
     ],
