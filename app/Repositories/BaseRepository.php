@@ -43,14 +43,21 @@ class BaseRepository implements BaseRepositoryInterface
 
     public function update($id, array $data): Model
     {
-        $model = $this->find($id);
+        $model = $this->findOrFail($id);
         $model->update($data);
+        return $model;
+    }
+
+    public function updateWhere($id, array $data, array $where): Model
+    {
+        $model = $this->findOrFail($id);
+        $model->where($where)->update($data);
         return $model;
     }
 
     public function delete($id): bool
     {
-        $model = $this->find($id);
+        $model = $this->findOrFail($id);
         return $model->delete();
     }
 

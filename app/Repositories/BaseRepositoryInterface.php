@@ -21,6 +21,8 @@ interface BaseRepositoryInterface
 
     public function update($id, array $data): Model;
 
+    public function updateWhere($id, array $data, array $where): Model;
+
     public function delete($id): bool;
 
 }

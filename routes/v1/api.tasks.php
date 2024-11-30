@@ -28,7 +28,12 @@ Route::prefix('tasks')
     Route::middleware(['auth:sanctum'])
     ->group(function () {
 
-        Route::resource('/', TaskController::class)->except(['edit', 'create']);
+        Route::get('/', [TaskController::class, 'index'])->name('index');
+        Route::post('/', [TaskController::class, 'store'])->name('store');
+        Route::post('/assign', [TaskController::class, 'assign'])->name('assign');
+        Route::get('/{taskId}', [TaskController::class, 'show'])->name('show');
+        Route::patch('/{taskId}', [TaskController::class, 'update'])->name('update');
+        Route::delete('/{taskId}', [TaskController::class, 'destroy'])->name('destroy');
 
     });
 

@@ -19,10 +19,25 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
         return $this->model->where('user_id', $userId)->latest('due_date')->get();
     }
 
+    public function findOrFailForUser($userId, $taskId): Task
+    {
+        return $this->model->where('user_id', $userId)->findOrFail($taskId);
+    }
+
     public function createForUser($userId, array $data): Task
     {
         $data['user_id'] = $userId;
-        return $this->create($data);
+        return $this->create($data)->fresh();
+    }
+
+    public function updateForUser($userId, $taskId, array $data): Task
+    {
+        $data['user_id'] = $userId;
+        return $this->updateWhere(
+            $taskId,
+            $data,
+            [['user_id', '=', $userId]]
+        )->fresh();
     }
 
 }

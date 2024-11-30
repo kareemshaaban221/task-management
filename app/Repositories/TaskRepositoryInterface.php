@@ -13,6 +13,10 @@ interface TaskRepositoryInterface extends BaseRepositoryInterface
 
     public function getForUser($userId): Collection;
 
+    public function findOrFailForUser($userId, $taskId): Task;
+
     public function createForUser($userId, array $data): Task;
+
+    public function updateForUser($userId, $taskId, array $data): Task;
 
 }
