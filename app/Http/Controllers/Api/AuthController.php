@@ -9,7 +9,11 @@ use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\LogoutRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Resources\Api\UserResource;
+use App\Mail\NotificationMail;
+use App\Mail\TasksReminderMail;
+use App\Notifications\TaskReminderNotification;
 use App\Services\AuthServiceInterface;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
