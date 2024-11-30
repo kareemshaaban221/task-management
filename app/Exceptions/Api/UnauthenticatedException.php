@@ -18,12 +18,12 @@ use App\Facades\ApiJsonResponse;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiBaseException extends Exception
+class UnauthenticatedException extends Exception
 {
 
     protected $errors;
 
-    public function __construct($message = "Api Exception", $errors = null)
+    public function __construct($message = "Unauthenticated", $errors = null)
     {
         parent::__construct($message);
         $this->errors = $errors;
@@ -31,9 +31,12 @@ class ApiBaseException extends Exception
 
     public function render()
     {
-        return ApiJsonResponse::serverErrorResponse(
-            $errors ?? $this->getTrace(),
-            Response::HTTP_INTERNAL_SERVER_ERROR,
+        return ApiJsonResponse::clientErrorResponse(
+            [
+                'type' => 'auth_error',
+                'message' => 'Check your credentials',
+            ],
+            Response::HTTP_UNAUTHORIZED,
             $this->getMessage()
         );
     }

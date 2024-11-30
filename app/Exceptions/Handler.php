@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Facades\ApiJsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -23,6 +24,10 @@ class Handler
                         'message' => $exception->getMessage(),
                     ]
                 ]);
+            }
+
+            if ($exception instanceof ValidationException) {
+                return ApiJsonResponse::validationErrorResponse($exception->errors());
             }
         }
     }

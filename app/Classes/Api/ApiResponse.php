@@ -164,4 +164,9 @@ class ApiResponse implements ApiResponseInterface
         return $this->clientErrorResponse($errors, Response::HTTP_NOT_FOUND, $message);
     }
 
+    public function validationErrorResponse($errors = [], $message = "Validation Error")
+    {
+        return $this->clientErrorResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY, $message);
+    }
+
 }
