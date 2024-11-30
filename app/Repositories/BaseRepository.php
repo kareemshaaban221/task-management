@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class BaseRepository implements BaseRepositoryInterface
 {
@@ -12,6 +14,16 @@ class BaseRepository implements BaseRepositoryInterface
     public function __construct(Model $model)
     {
         $this->model = $model;
+    }
+
+    public function getPaginated($pageSize = 10): Paginator
+    {
+        return $this->model->paginate($pageSize);
+    }
+
+    public function getAll(): Collection
+    {
+        return $this->model->get();
     }
 
     public function find($id): ?Model

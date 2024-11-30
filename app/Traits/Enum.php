@@ -75,6 +75,11 @@ trait Enum
         return null;
     }
 
+    public static function toString($delimiter = ','): string
+    {
+        return implode($delimiter, static::values());
+    }
+
     /**
      * Magic method to allow static calling of enum cases as methods.
      *

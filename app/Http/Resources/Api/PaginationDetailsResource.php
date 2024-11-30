@@ -47,8 +47,8 @@ class PaginationDetailsResource extends JsonResource
         $this->perPage      = $paginator->perPage();
         $this->prevPageUrl  = $paginator->previousPageUrl();
         if ($paginator instanceof LengthAwarePaginator) {
-            $this->to = min($this->currentPage * $this->perPage, $this->total);
             $this->total = $paginator->total();
+            $this->to = min($this->currentPage * $this->perPage, $this->total);
         }
     }
 
@@ -60,13 +60,13 @@ class PaginationDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'current_page'  => $this['currentPage'],
-            'next_page_url' => $this['nextPageUrl'],
-            'path'          => $this['path'],
-            'per_page'      => $this['perPage'],
-            'prev_page_url' => $this['prevPageUrl'],
-            'to'            => $this['to'],
-            'total'         => $this['total'],
+            'current_page'  => $this->currentPage,
+            'next_page_url' => $this->nextPageUrl,
+            'path'          => $this->path,
+            'per_page'      => $this->perPage,
+            'prev_page_url' => $this->prevPageUrl,
+            'to'            => $this->to,
+            'total'         => $this->total,
         ];
     }
 }
