@@ -2,13 +2,11 @@
 
 namespace App\Services;
 
-use App\Enums\TaskStatusEnum;
 use App\Http\Resources\Api\PaginationResource;
 use App\Http\Resources\Api\TaskResource;
 use App\Repositories\TaskRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Traits\WithDbTransaction;
-use Illuminate\Support\Carbon;
 
 class TaskService implements TaskServiceInterface
 {
@@ -37,8 +35,6 @@ class TaskService implements TaskServiceInterface
 
     public function createUserTask($userId, $data)
     {
-        $data = $this->updateStatusBasedOnDueDate($data);
-
         $task = $this->withDbTransaction(function () use ($userId, $data) {
             return $this->taskRepository->createForUser($userId, $data);
         });
@@ -54,10 +50,6 @@ class TaskService implements TaskServiceInterface
 
     public function updateUserTask($userId, $taskId, $data)
     {
-        if (array_key_exists('due_date', $data)) {
-            $data = $this->updateStatusBasedOnDueDate($data);
-        }
-
         $task = $this->withDbTransaction(function () use ($userId, $taskId, $data) {
             return $this->taskRepository->updateForUser($userId, $taskId, $data);
         });
@@ -70,15 +62,6 @@ class TaskService implements TaskServiceInterface
         return $this->taskRepository
             ->findOrFailForUser($userId, $taskId)
             ->delete();
-    }
-
-    private function updateStatusBasedOnDueDate($data)
-    {
-        $data['due_date'] = Carbon::parse($data['due_date']);
-        if ($data['due_date']->lessThanOrEqualTo(now())) {
-            $data['status'] = TaskStatusEnum::OVER_DUE();
-        }
-        return $data;
     }
 
 }
