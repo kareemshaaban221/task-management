@@ -69,6 +69,10 @@ class ApiResponse implements ApiResponseInterface
      */
     public function successResponse($data, $code = 200, $message = "Success")
     {
+        if ($data instanceof PaginationResource) {
+            return $this->paginatedResponse($data, $code, $message);
+        }
+
         $this->data = $data;
         $this->message = $message;
         $this->status = true;

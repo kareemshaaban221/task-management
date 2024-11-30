@@ -9,6 +9,7 @@
  * @package  Routes\v1
  */
 
+use App\Http\Controllers\Api\TaskController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,18 @@ Route::prefix('tasks')
 
     Route::get('model-not-found', function () {
         throw new ModelNotFoundException();
+    });
+
+    Route::middleware(['auth:sanctum'])
+    ->group(function () {
+
+        Route::get('/', [TaskController::class, 'index'])->name('index');
+        Route::post('/', [TaskController::class, 'store'])->name('store');
+        Route::post('/assign', [TaskController::class, 'assign'])->name('assign');
+        Route::get('/{taskId}', [TaskController::class, 'show'])->name('show');
+        Route::patch('/{taskId}', [TaskController::class, 'update'])->name('update');
+        Route::delete('/{taskId}', [TaskController::class, 'destroy'])->name('destroy');
+
     });
 
 });

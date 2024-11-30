@@ -44,8 +44,8 @@ class PaginationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this['items'],
-            'pagination_details' => $this['paginationDetailsResource'],
+            'data' => $this->getData(),
+            'pagination_details' => $this->getPaginationDetails(),
         ];
     }
 
@@ -56,7 +56,7 @@ class PaginationResource extends JsonResource
      */
     public function getData(): array
     {
-        return $this['items'];
+        return $this->items;
     }
 
     /**
@@ -66,6 +66,6 @@ class PaginationResource extends JsonResource
      */
     public function getPaginationDetails(): PaginationDetailsResource
     {
-        return $this['paginationDetailsResource'];
+        return $this->paginationDetailsResource;
     }
 }
