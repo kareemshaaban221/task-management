@@ -33,6 +33,14 @@ class AuthService implements AuthServiceInterface
         return new AuthResource(compact('user', 'token'));
     }
 
+    public function attempt($credentials)
+    {
+        if (! Auth::attempt($credentials)) {
+            throw new UnauthenticatedException;
+        }
+        return true;
+    }
+
     public function register($data)
     {
         $credentials = array_intersect_key($data, array_flip(['email', 'password']));
@@ -47,6 +55,12 @@ class AuthService implements AuthServiceInterface
         $token = $this->createToken($user);
 
         return new AuthResource(compact('user', 'token'));
+    }
+
+    public function logout($user)
+    {
+        $user->tokens()->delete();
+        return true;
     }
 
 }

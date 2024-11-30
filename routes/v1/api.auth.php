@@ -40,6 +40,8 @@ Route::prefix('auth')
 
         Route::get('profile', [AuthController::class, 'profile'])->name('profile');
 
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
     });
 
 });

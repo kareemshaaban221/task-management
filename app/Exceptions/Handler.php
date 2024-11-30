@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Api\UnauthenticatedException;
 use App\Facades\ApiJsonResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -28,6 +30,10 @@ class Handler
 
             if ($exception instanceof ValidationException) {
                 return ApiJsonResponse::validationErrorResponse($exception->errors());
+            }
+
+            if ($exception instanceof AuthenticationException) {
+                throw new UnauthenticatedException;
             }
         }
     }

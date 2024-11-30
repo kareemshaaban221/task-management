@@ -27,6 +27,8 @@ interface ApiResponseInterface
     public function okResponse($data, $message = "Success");
     public function paginatedResponse(PaginationResource $resource, $code = 200, $message = "Success");
     public function createdResponse($data, $message = "Created");
+    public function noContentResponse($message = "No Content");
     public function notFoundResponse($errors = [], $message = "Not Found");
+    public function validationErrorResponse($errors = [], $message = "Validation Error");
 
 }

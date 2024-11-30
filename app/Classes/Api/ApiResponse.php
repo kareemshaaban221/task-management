@@ -149,6 +149,17 @@ class ApiResponse implements ApiResponseInterface
         return $this->successResponse($data, Response::HTTP_CREATED, $message);
     }
 
+    /**
+     * Build an HTTP 204 No Content success response.
+     *
+     * @param string $message Success message.
+     * @return JsonResponse|mixed
+     */
+    public function noContentResponse($message = "No Content")
+    {
+        return $this->successResponse(null, Response::HTTP_NO_CONTENT, $message);
+    }
+
     // ----------------------------------
     // Client Error Methods
     // ----------------------------------
@@ -164,6 +175,14 @@ class ApiResponse implements ApiResponseInterface
         return $this->clientErrorResponse($errors, Response::HTTP_NOT_FOUND, $message);
     }
 
+    /**
+     * Build an HTTP 422 Unprocessable Entity client error response, typically used
+     * for validation errors.
+     *
+     * @param array $errors Errors to be returned in the response.
+     * @param string $message Error message to be returned in the response.
+     * @return JsonResponse|mixed
+     */
     public function validationErrorResponse($errors = [], $message = "Validation Error")
     {
         return $this->clientErrorResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY, $message);
