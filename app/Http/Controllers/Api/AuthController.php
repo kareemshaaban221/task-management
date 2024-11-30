@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Facades\ApiJsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\RegisterRequest;
 use App\Services\AuthServiceInterface;
 
 class AuthController extends Controller
@@ -18,6 +19,13 @@ class AuthController extends Controller
     {
         $credentials = $loginRequest->validated();
         $resource = $this->authService->login($credentials);
+        return ApiJsonResponse::successResponse($resource);
+    }
+
+    public function register(RegisterRequest $registerRequest)
+    {
+        $data = $registerRequest->validated();
+        $resource = $this->authService->register($data);
         return ApiJsonResponse::successResponse($resource);
     }
 
