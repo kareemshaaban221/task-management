@@ -27,6 +27,7 @@ use App\Traits\Enum;
  * @method static string PENDING()
  * @method static string IN_PROGRESS()
  * @method static string COMPLETED()
+ * @method static string OVER_DUE()
  * @method static string CANCELLED()
  */
 enum TaskStatusEnum: string

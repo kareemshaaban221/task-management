@@ -1,11 +1,14 @@
 <x-mail::message>
-# Introduction
+# Task Reminder
 
-The body of your message.
+Dear {{ $user->name }},
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+This is a task reminder for you.
+You have to finish these tasks:
+
+@foreach ($tasks as $task)
+- {{ $task->title }}
+@endforeach
 
 Thanks,<br>
 {{ config('app.name') }}
