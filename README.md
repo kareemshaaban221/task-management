@@ -186,6 +186,7 @@ To configure the email settings for the task reminder notifications, follow thes
 
 ### Mail Sample:
 The following is an example of the email notification sent by the application to inform users of tasks with approaching deadlines. This notification email contains a list of task names that are about to expire.
+
 ![Task Reminder Mail Sample](./task_reminder_sample_mail.png)
 
 ---
