@@ -129,6 +129,30 @@ php artisan key:generate
 
 ---
 
+## Migrations Setup
+
+To set up the database schema, start by running the migrations with the following command:
+```bash
+php artisan migrate
+```
+
+If you have already migrated the database and need to reset it, you can use the following command to fresh-migrate the schema:
+```bash
+php artisan migrate:fresh
+```
+
+To populate your database with sample data, run the seeders using:
+```bash
+php artisan db:seed
+```
+
+For convenience, you can run both migrations and seeders together, ensuring your database is fully set up with one command:
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
 ## Queue Setup
 
 The system uses queues for notifications. Start the queue worker to handle notifications:
