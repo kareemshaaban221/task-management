@@ -181,8 +181,12 @@ To configure the email settings for the task reminder notifications, follow thes
 2. Locate the `buildMailer` method within the file.
 3. Update the email and password credentials in the method to match your mail service configuration.
 
-### Note:
-There is currently an issue with Laravel 11.x where the `.env` file configurations for mail may not apply correctly. This requires a manual override within the code. Ensure your credentials are secure and avoid hardcoding them in production environments where possible. If you encounter further issues, consult the Laravel documentation or community forums for troubleshooting assistance.
+> **Note:**  
+> There is currently an issue with Laravel 11.x where the `.env` file configurations for mail may not apply correctly. This requires a manual override within the code. Ensure your credentials are secure and avoid hardcoding them in production environments where possible. If you encounter further issues, consult the Laravel documentation or community forums for troubleshooting assistance.
+
+### Mail Sample:
+The following is an example of the email notification sent by the application to inform users of tasks with approaching deadlines. This notification email contains a list of task names that are about to expire.
+![Task Reminder Mail Sample](./task_reminder_sample_mail.png)
 
 ---
 
