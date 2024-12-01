@@ -196,6 +196,8 @@ Comming soon
 
 The API documentation is available through Postman. You can access the full documentation by following this [link](https://documenter.getpostman.com/view/18140965/2sAYBYepZe).
 
+You can also download the Postman collection for this API from the following link: <a href="./postman_collection.json" download>Download Postman Collection</a>.
+
 ---
 
 ## Future Work

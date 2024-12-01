@@ -1,0 +1,2444 @@
+{
+	"info": {
+		"_postman_id": "2eb2ea37-4447-4720-bd59-f9806f6fd589",
+		"name": "Task Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18140965"
+	},
+	"item": [
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "Up",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/up",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"up"
+							]
+						},
+						"description": "This endpoint makes an HTTP GET request to retrieve the status of the server. The response of this request is documented below as a JSON schema.\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"string\"\n    },\n    \"uptime\": {\n      \"type\": \"number\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store auth token in collection variable\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.collectionVariables.set(\"auth_token\", jsonData.data.auth.token);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"auth",
+								"login"
+							]
+						},
+						"description": "### Auth Login\n\nThe endpoint allows users to authenticate and receive a token for accessing protected resources.\n\n#### Request Body\n\n- email (string): The email of the user.\n    \n- password (string): The password of the user.\n    \n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status\": {\n            \"type\": \"boolean\"\n        },\n        \"code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"user\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"id\": {\n                            \"type\": \"integer\"\n                        },\n                        \"name\": {\n                            \"type\": \"string\"\n                        },\n                        \"email\": {\n                            \"type\": \"string\"\n                        },\n                        \"email_verified_at\": {\n                            \"type\": \"string\"\n                        },\n                        \"created_at\": {\n                            \"type\": \"string\"\n                        },\n                        \"updated_at\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"auth\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"token\": {\n                            \"type\": \"string\"\n                        },\n                        \"expires_at\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Error - Credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"testtest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/login",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 14:48:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 401,\n    \"message\": \"Unauthenticated\",\n    \"errors\": {\n        \"type\": \"auth_error\",\n        \"message\": \"Check your credentials\"\n    }\n}"
+						},
+						{
+							"name": "Error - validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"testtest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 14:48:55 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"email\": [\n            \"The selected email is invalid.\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"email\": \"test@test.com\",\r\n    // \"password\": \"testtest\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 14:49:14 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"email\": [\n            \"The email field is required.\"\n        ],\n        \"password\": [\n            \"The password field is required.\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:13:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Test User\",\n            \"email\": \"test@example.com\",\n            \"email_verified_at\": \"2024-11-30T05:25:40.000000Z\",\n            \"created_at\": \"2024-11-30T05:25:40.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:40.000000Z\"\n        },\n        \"auth\": {\n            \"token\": \"13|JrHVH5aQefmOlksqEiO66BzIzMTQwpC2azSXzByo937e60e8\",\n            \"expires_at\": \"2025-11-30T15:13:32.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Attempt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/attempt",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"auth",
+								"attempt"
+							]
+						},
+						"description": "### Auth Attempt\n\nThis endpoint is used to authenticate a user by providing their email and password.\n\n#### Request Body\n\n- `email` (string) - The email of the user.\n    \n- `password` (string) - The password of the user.\n    \n\n#### Response Body\n\nThe response will contain the authentication token and user information upon successful authentication."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/attempt",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"attempt"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:55:32 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"email\": \"test@example.com\",\r\n    // \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/attempt",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"attempt"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:55:58 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"email\": [\n            \"The email field is required.\"\n        ],\n        \"password\": [\n            \"The password field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store auth token in collection variable\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.collectionVariables.set(\"auth_token\", jsonData.data.auth.token);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test User 2\",\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"auth",
+								"register"
+							]
+						},
+						"description": "### Register User\n\nThis endpoint allows the client to register a new user with the provided name, email, password, and password confirmation.\n\n**Request Body**\n\n- `name` (string): The name of the user.\n    \n- `email` (string): The email address of the user.\n    \n- `password` (string): The password for the user account.\n    \n- `password_confirmation` (string): Confirmation of the password.\n    \n\n**Response**\n\n- `status` (boolean): Indicates the status of the request.\n    \n- `code` (integer): The status code of the response.\n    \n- `message` (string): Additional information or error message.\n    \n- `data` (object):\n    \n    - `user` (object):\n        \n        - `name` (string): The name of the registered user.\n            \n        - `email` (string): The email address of the registered user.\n            \n        - `updated_at` (string): Timestamp of the user's profile update.\n            \n        - `created_at` (string): Timestamp of the user's account creation.\n            \n        - `id` (integer): The unique identifier of the registered user.\n            \n    - `auth` (object):\n        \n        - `token` (string): Authentication token for the registered user.\n            \n        - `expires_at` (string): Expiry timestamp of the authentication token."
+					},
+					"response": [
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/register",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:23:05 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ],\n        \"email\": [\n            \"The email has already been taken.\"\n        ],\n        \"password\": [\n            \"The password field confirmation does not match.\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "Error - Already Exists",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:30:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 409,\n    \"message\": \"Already Exists\",\n    \"errors\": {\n        \"type\": \"model_error\",\n        \"message\": \"This resource already exists\"\n    }\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test User 2\",\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 15:43:50 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"user\": {\n            \"name\": \"Test User 2\",\n            \"email\": \"test2@example.com\",\n            \"updated_at\": \"2024-11-30T15:43:50.000000Z\",\n            \"created_at\": \"2024-11-30T15:43:50.000000Z\",\n            \"id\": 13\n        },\n        \"auth\": {\n            \"token\": \"15|74kSuFiBCnQKMSDKpCaCSGtAB1ti11IZOA9WeB1U91eebb98\",\n            \"expires_at\": \"2025-11-30T15:43:50.000000Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "### /auth/logout\n\nThis endpoint is used to log out the authenticated user.\n\n#### Request\n\nThe request does not require a request body. It is a simple HTTP POST request to log out the user.\n\n#### Response\n\nThe response to this request returns a status code of 204 with a Content-Type of text/xml. Since the response body is null, there is no specific JSON schema to document."
+					},
+					"response": [
+						{
+							"name": "Error - Unauthenticated",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/logout",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:04:24 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 401,\n    \"message\": \"Unauthenticated\",\n    \"errors\": {\n        \"type\": \"auth_error\",\n        \"message\": \"Check your credentials\"\n    }\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:06:02 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"auth",
+								"profile"
+							]
+						},
+						"description": "### Auth Profile\n\nThis endpoint retrieves the profile information for the authenticated user.\n\n#### Request\n\nNo request body is required for this request.\n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status\": {\n            \"type\": \"boolean\"\n        },\n        \"code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"name\": {\n                    \"type\": \"string\"\n                },\n                \"email\": {\n                    \"type\": \"string\"\n                },\n                \"email_verified_at\": {\n                    \"type\": [\"string\", \"null\"]\n                },\n                \"created_at\": {\n                    \"type\": \"string\"\n                },\n                \"updated_at\": {\n                    \"type\": \"string\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Error - Unauthenticated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/auth/profile",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"profile"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:12:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 401,\n    \"message\": \"Unauthenticated\",\n    \"errors\": {\n        \"type\": \"auth_error\",\n        \"message\": \"Check your credentials\"\n    }\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/auth/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"auth",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:13:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Test User\",\n        \"email\": \"test@example.com\",\n        \"email_verified_at\": \"2024-11-30T05:25:40.000000Z\",\n        \"created_at\": \"2024-11-30T05:25:40.000000Z\",\n        \"updated_at\": \"2024-11-30T05:25:40.000000Z\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "My Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks?paginated=10&page=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "paginated",
+									"value": "10",
+									"description": "page size"
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"description": "number of page"
+								},
+								{
+									"key": "filters[due_date_from]",
+									"value": "2024-12-05 00:00",
+									"disabled": true
+								},
+								{
+									"key": "filters[due_date_to]",
+									"value": "2024-12-07 23:00",
+									"disabled": true
+								},
+								{
+									"key": "filters[status]",
+									"value": "open",
+									"disabled": true
+								}
+							]
+						},
+						"description": "### GET /tasks\n\nThis endpoint retrieves a paginated list of tasks.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{baseUrl}}/{{apiPrefixVersion}}/tasks`\n    \n- Query Parameters:\n    \n    - `paginated` (boolean, optional): Set to `true` to enable pagination.\n        \n    - `page` (integer, optional): The page number to retrieve.\n        \n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"boolean\"\n    },\n    \"code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\"\n          },\n          \"title\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"due_date\": {\n            \"type\": \"string\"\n          },\n          \"status\": {\n            \"type\": \"string\"\n          },\n          \"created_at\": {\n            \"type\": \"string\"\n          },\n          \"updated_at\": {\n            \"type\": \"string\"\n          },\n          \"user_id\": {\n            \"type\": \"integer\"\n          }\n        }\n      }\n    },\n    \"pagination_details\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"current_page\": {\n          \"type\": \"integer\"\n        },\n        \"next_page_url\": {\n          \"type\": \"string\"\n        },\n        \"path\": {\n          \"type\": \"string\"\n        },\n        \"per_page\": {\n          \"type\": \"integer\"\n        },\n        \"prev_page_url\": {\n          \"type\": [\"string\", \"null\"]\n        },\n        \"to\": {\n          \"type\": \"integer\"\n        },\n        \"total\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/tasks",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"tasks"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:49:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"title\": \"Itaque aut aut tempore sint laudantium.\",\n            \"description\": \"Sunt et quae aut provident dolorem tenetur iure. Similique dignissimos ex cum id dicta.\",\n            \"due_date\": \"2024-12-06T16:12:21.000000Z\",\n            \"status\": \"cancelled\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 29,\n            \"title\": \"Dolores aspernatur earum tenetur quia enim culpa.\",\n            \"description\": \"Vero temporibus odit eveniet. Nihil consequuntur eum totam voluptas. Aut dolorem cum nemo rerum ut voluptas excepturi. Architecto qui nostrum eos temporibus sit iure.\",\n            \"due_date\": \"2024-12-02T22:19:59.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 55,\n            \"title\": \"Consequatur reprehenderit ducimus excepturi omnis.\",\n            \"description\": \"Sunt et optio et unde in animi. Perferendis delectus odit beatae qui qui veritatis dicta. Eum possimus voluptatem atque explicabo et quo id dolores. Dolorum autem fugit et ut. Veniam ut tempore consequuntur a eum.\",\n            \"due_date\": \"2024-12-01T12:46:56.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 56,\n            \"title\": \"Dolores iusto facere hic in.\",\n            \"description\": \"Maxime dolore est iure quas voluptate quo sunt. Harum dolores hic qui. Maxime consequatur est consectetur rem voluptatem in sed. Occaecati veritatis quam voluptate dolorem voluptatem consectetur corrupti dignissimos.\",\n            \"due_date\": \"2024-12-06T19:40:39.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 65,\n            \"title\": \"Quis velit qui dolorum iusto.\",\n            \"description\": \"Mollitia quas itaque sint. Minima ut nisi rerum.\",\n            \"due_date\": \"2024-12-06T10:15:31.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 66,\n            \"title\": \"Ipsa ut velit velit molestias at.\",\n            \"description\": \"Magnam consequatur nihil magni voluptas veniam sint quibusdam. Aliquid totam rerum consequatur at. Et cupiditate aut assumenda nemo. In delectus ducimus assumenda tempore aut vel illo magni.\",\n            \"due_date\": \"2024-12-04T16:59:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 68,\n            \"title\": \"Reiciendis dolorum quia accusamus.\",\n            \"description\": \"Vel magnam nisi consequatur aut sit. Quasi pariatur omnis possimus repellat quidem dolorum omnis eos.\",\n            \"due_date\": \"2024-12-03T01:20:49.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 100,\n            \"title\": \"Occaecati facilis occaecati sunt voluptas dolores est.\",\n            \"description\": \"Modi possimus dolorem maiores quis voluptas. Officia ex sed adipisci ut accusamus sunt. Laudantium temporibus debitis quod quae vel voluptatum. Ullam eligendi libero qui voluptatibus.\",\n            \"due_date\": \"2024-12-07T03:47:39.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 112,\n            \"title\": \"Eaque sint ullam est minima et aspernatur quo fugiat.\",\n            \"description\": \"Voluptas quis eos debitis ut in aperiam id. Laborum odit corrupti non. Nostrum est accusamus eos veniam est aspernatur.\",\n            \"due_date\": \"2024-12-03T22:26:37.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 113,\n            \"title\": \"Sed quo officia magni quia sit aut.\",\n            \"description\": \"At provident commodi officia doloribus eos. Nobis est magnam facere officiis. Id in aut doloremque et consequatur omnis et. Ut quae incidunt rerum consequatur laboriosam et deserunt.\",\n            \"due_date\": \"2024-12-03T05:23:51.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 131,\n            \"title\": \"Eos et eos nulla in labore alias porro.\",\n            \"description\": \"Ipsam neque eos cupiditate aut quis. Temporibus sint quas dicta consequuntur ad. Earum aut officia delectus qui.\",\n            \"due_date\": \"2024-11-30T20:38:44.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 133,\n            \"title\": \"Nostrum rerum est ipsum explicabo et dicta voluptatem.\",\n            \"description\": \"Pariatur non ut unde. Ex maiores corporis corrupti est. Reprehenderit error autem magni est. Veniam consequatur modi corporis id quaerat et. Consequatur id est ea dolor perspiciatis.\",\n            \"due_date\": \"2024-12-02T15:56:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 166,\n            \"title\": \"Debitis culpa fuga delectus quo optio minus autem.\",\n            \"description\": \"Nisi molestias rerum quo voluptas enim qui adipisci. Nihil repudiandae sapiente ut asperiores impedit et minima. Aut sed quasi tenetur fuga.\",\n            \"due_date\": \"2024-12-06T01:31:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 173,\n            \"title\": \"Et assumenda quam error illo velit minima cumque.\",\n            \"description\": \"Animi vel odio maxime minus consequatur. Suscipit consequatur nihil quam esse adipisci quod voluptas. In soluta dolorum numquam tempora autem dolor. Soluta quam earum animi voluptas nostrum numquam.\",\n            \"due_date\": \"2024-12-02T08:23:55.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 178,\n            \"title\": \"Non quod natus ullam eum.\",\n            \"description\": \"Qui enim sed corrupti consequatur enim neque quo a. Voluptas omnis voluptatibus velit quidem officiis nihil magni sint. Id ullam hic voluptas eius ut est expedita dignissimos. Labore quia recusandae velit vero quia sit tempore.\",\n            \"due_date\": \"2024-12-02T10:58:06.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 222,\n            \"title\": \"Sed blanditiis et reprehenderit ut fuga.\",\n            \"description\": \"Labore temporibus ipsa quo quia accusamus dignissimos illum. Dolorem saepe quas sed occaecati.\",\n            \"due_date\": \"2024-12-02T05:31:29.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 224,\n            \"title\": \"Adipisci quam sed aperiam a mollitia.\",\n            \"description\": \"Ad quibusdam delectus ullam illum eius cupiditate voluptas in. Officia id autem atque rerum reprehenderit autem. Qui omnis deleniti commodi deleniti labore provident.\",\n            \"due_date\": \"2024-12-06T15:34:52.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 236,\n            \"title\": \"Voluptatem et et consequuntur sed at.\",\n            \"description\": \"Adipisci pariatur exercitationem quasi quia vitae et error. Veniam provident veritatis neque quae at. Officia quas necessitatibus ut omnis praesentium eveniet. Dolores minima reiciendis rerum excepturi delectus praesentium.\",\n            \"due_date\": \"2024-12-03T13:42:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 250,\n            \"title\": \"Dolorem delectus veniam ducimus aperiam minima.\",\n            \"description\": \"Asperiores rerum iste sequi consequuntur beatae similique illum. Fugit harum quasi veniam quia at pariatur odio. Illum et nesciunt architecto at.\",\n            \"due_date\": \"2024-12-04T03:40:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 261,\n            \"title\": \"Qui aperiam et aspernatur eaque et rerum doloribus.\",\n            \"description\": \"Sapiente illum laborum deleniti cum eaque ut dolor. Nihil dolorem dolorem molestiae dolores. Cum praesentium ratione rem dolorem. Numquam voluptatem cum animi dignissimos molestiae est.\",\n            \"due_date\": \"2024-12-05T16:43:47.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 269,\n            \"title\": \"Illo possimus vero fuga sapiente.\",\n            \"description\": \"Delectus numquam quos ut dolorem quia earum et. Qui magni maiores quia ipsam laudantium est. Et ipsam vitae omnis doloremque et qui. Aliquam fuga blanditiis repudiandae ab dolores id.\",\n            \"due_date\": \"2024-12-02T12:54:15.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 280,\n            \"title\": \"In temporibus aliquam voluptatibus nam aut hic.\",\n            \"description\": \"Ipsa quo consequatur ipsum. Consectetur quod nulla natus aliquid. Ad eum minus illum magni quasi maxime officiis. Est dicta rerum qui enim sit est. Perferendis voluptatibus ex incidunt nobis ea.\",\n            \"due_date\": \"2024-12-01T01:15:10.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 295,\n            \"title\": \"Reprehenderit architecto libero quia qui vero beatae nisi ut.\",\n            \"description\": \"Ex ratione magnam est natus ullam. Quisquam hic rerum porro et qui maiores. Sint error voluptate cupiditate quos in. Odio officia nisi et non doloremque tempora.\",\n            \"due_date\": \"2024-11-30T15:16:37.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 318,\n            \"title\": \"Debitis laudantium possimus odio voluptatem et totam molestias.\",\n            \"description\": \"Consequatur nihil minima sunt cum eveniet corporis. Ad soluta necessitatibus reprehenderit recusandae est debitis. Amet totam quis vel veniam reprehenderit vero. Ut qui necessitatibus tempora tenetur.\",\n            \"due_date\": \"2024-11-30T06:23:24.000000Z\",\n            \"status\": \"cancelled\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 375,\n            \"title\": \"Iure voluptatibus quia fuga.\",\n            \"description\": \"Quidem et libero et voluptatibus odit quia. Et quos aut commodi eos ex iste qui.\",\n            \"due_date\": \"2024-12-02T01:30:57.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 412,\n            \"title\": \"Sit quis cumque eos aut facere dolor.\",\n            \"description\": \"Qui beatae qui placeat commodi dicta iste. Atque minus repudiandae quisquam ipsa ipsum iste libero qui. Nulla consequatur voluptate tempore id ipsa accusamus. Quidem porro ut autem quidem optio.\",\n            \"due_date\": \"2024-11-30T07:38:00.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 416,\n            \"title\": \"Suscipit fuga qui dolores voluptatum neque rem.\",\n            \"description\": \"Ut nam aliquid quibusdam sapiente sed nam suscipit suscipit. Totam esse est cum unde adipisci commodi quos. Aliquam adipisci aspernatur sit doloremque et.\",\n            \"due_date\": \"2024-12-07T00:43:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 426,\n            \"title\": \"Corporis eaque quia nemo consequatur.\",\n            \"description\": \"Et optio inventore voluptas et repudiandae nam consequatur. Ab sed est dicta quis. Quam sit est officia officiis libero eos voluptatibus.\",\n            \"due_date\": \"2024-12-04T21:30:27.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 430,\n            \"title\": \"Qui iusto quia eligendi et sit.\",\n            \"description\": \"Necessitatibus nemo numquam et quisquam enim rerum eum. Velit atque repudiandae impedit optio a velit. Eaque eligendi facilis facere officia aut id pariatur.\",\n            \"due_date\": \"2024-12-07T00:45:50.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 442,\n            \"title\": \"Quo debitis sit nesciunt deserunt assumenda.\",\n            \"description\": \"Mollitia est possimus consequatur sed. Rerum occaecati iusto totam dicta beatae. Dignissimos eum quo ratione quibusdam nihil nihil iusto tenetur.\",\n            \"due_date\": \"2024-12-05T08:09:31.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 484,\n            \"title\": \"Necessitatibus incidunt in totam suscipit.\",\n            \"description\": \"Praesentium exercitationem neque est est ipsa neque facilis voluptatem. Molestias et eos harum aut beatae non non earum. Quis voluptas rerum et temporibus totam est eligendi.\",\n            \"due_date\": \"2024-12-02T19:16:29.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 488,\n            \"title\": \"Ut voluptas consectetur ut facilis minus.\",\n            \"description\": \"Ut enim nesciunt quia sed voluptatem ratione eum. Sequi aut numquam reiciendis.\",\n            \"due_date\": \"2024-11-30T21:04:05.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 489,\n            \"title\": \"Et culpa molestiae ut molestiae.\",\n            \"description\": \"Non quae voluptatem laudantium. Qui animi illum reiciendis praesentium est. Voluptatem sit non iure et. Beatae vel quia quo.\",\n            \"due_date\": \"2024-12-05T00:29:32.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 495,\n            \"title\": \"Sint ex quia odio aliquid et eaque recusandae odit.\",\n            \"description\": \"Aliquam asperiores sunt tempore quo et animi. Corrupti in iusto sint aliquid alias eius itaque. Similique molestias omnis culpa et quia sunt suscipit soluta.\",\n            \"due_date\": \"2024-12-06T14:21:35.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        }\n    ]\n}"
+						},
+						{
+							"name": "Success - Paginated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks?paginated=10&page=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size"
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:56:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": 131,\n            \"title\": \"Eos et eos nulla in labore alias porro.\",\n            \"description\": \"Ipsam neque eos cupiditate aut quis. Temporibus sint quas dicta consequuntur ad. Earum aut officia delectus qui.\",\n            \"due_date\": \"2024-11-30T20:38:44.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 133,\n            \"title\": \"Nostrum rerum est ipsum explicabo et dicta voluptatem.\",\n            \"description\": \"Pariatur non ut unde. Ex maiores corporis corrupti est. Reprehenderit error autem magni est. Veniam consequatur modi corporis id quaerat et. Consequatur id est ea dolor perspiciatis.\",\n            \"due_date\": \"2024-12-02T15:56:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 166,\n            \"title\": \"Debitis culpa fuga delectus quo optio minus autem.\",\n            \"description\": \"Nisi molestias rerum quo voluptas enim qui adipisci. Nihil repudiandae sapiente ut asperiores impedit et minima. Aut sed quasi tenetur fuga.\",\n            \"due_date\": \"2024-12-06T01:31:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 173,\n            \"title\": \"Et assumenda quam error illo velit minima cumque.\",\n            \"description\": \"Animi vel odio maxime minus consequatur. Suscipit consequatur nihil quam esse adipisci quod voluptas. In soluta dolorum numquam tempora autem dolor. Soluta quam earum animi voluptas nostrum numquam.\",\n            \"due_date\": \"2024-12-02T08:23:55.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 178,\n            \"title\": \"Non quod natus ullam eum.\",\n            \"description\": \"Qui enim sed corrupti consequatur enim neque quo a. Voluptas omnis voluptatibus velit quidem officiis nihil magni sint. Id ullam hic voluptas eius ut est expedita dignissimos. Labore quia recusandae velit vero quia sit tempore.\",\n            \"due_date\": \"2024-12-02T10:58:06.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 222,\n            \"title\": \"Sed blanditiis et reprehenderit ut fuga.\",\n            \"description\": \"Labore temporibus ipsa quo quia accusamus dignissimos illum. Dolorem saepe quas sed occaecati.\",\n            \"due_date\": \"2024-12-02T05:31:29.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 224,\n            \"title\": \"Adipisci quam sed aperiam a mollitia.\",\n            \"description\": \"Ad quibusdam delectus ullam illum eius cupiditate voluptas in. Officia id autem atque rerum reprehenderit autem. Qui omnis deleniti commodi deleniti labore provident.\",\n            \"due_date\": \"2024-12-06T15:34:52.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 236,\n            \"title\": \"Voluptatem et et consequuntur sed at.\",\n            \"description\": \"Adipisci pariatur exercitationem quasi quia vitae et error. Veniam provident veritatis neque quae at. Officia quas necessitatibus ut omnis praesentium eveniet. Dolores minima reiciendis rerum excepturi delectus praesentium.\",\n            \"due_date\": \"2024-12-03T13:42:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 250,\n            \"title\": \"Dolorem delectus veniam ducimus aperiam minima.\",\n            \"description\": \"Asperiores rerum iste sequi consequuntur beatae similique illum. Fugit harum quasi veniam quia at pariatur odio. Illum et nesciunt architecto at.\",\n            \"due_date\": \"2024-12-04T03:40:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 261,\n            \"title\": \"Qui aperiam et aspernatur eaque et rerum doloribus.\",\n            \"description\": \"Sapiente illum laborum deleniti cum eaque ut dolor. Nihil dolorem dolorem molestiae dolores. Cum praesentium ratione rem dolorem. Numquam voluptatem cum animi dignissimos molestiae est.\",\n            \"due_date\": \"2024-12-05T16:43:47.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        }\n    ],\n    \"pagination_details\": {\n        \"current_page\": 2,\n        \"next_page_url\": \"http://127.0.0.1:8000/api/v1/tasks?page=3\",\n        \"path\": \"http://127.0.0.1:8000/api/v1/tasks\",\n        \"per_page\": 10,\n        \"prev_page_url\": \"http://127.0.0.1:8000/api/v1/tasks?page=1\",\n        \"to\": 20,\n        \"total\": 34\n    }\n}"
+						},
+						{
+							"name": "Error - Unauthenticated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks?paginated=10&page=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size"
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:57:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 401,\n    \"message\": \"Unauthenticated\",\n    \"errors\": {\n        \"type\": \"auth_error\",\n        \"message\": \"Check your credentials\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "User Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/user?email=test@example.com&paginated=10&page=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks",
+								"user"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "test@example.com"
+								},
+								{
+									"key": "paginated",
+									"value": "10",
+									"description": "page size"
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"description": "number of page"
+								},
+								{
+									"key": "filters[due_date_from]",
+									"value": "2024-12-05 00:00",
+									"disabled": true
+								},
+								{
+									"key": "filters[due_date_to]",
+									"value": "2024-12-07 23:00",
+									"disabled": true
+								},
+								{
+									"key": "filters[status]",
+									"value": "open",
+									"disabled": true
+								}
+							]
+						},
+						"description": "### GET /tasks/user\n\nThis endpoint retrieves a list of tasks for a specific user.\n\n#### Request\n\n- Parameters:\n    \n    - email (string, required): The email of the user for whom the tasks are being retrieved.\n        \n    - paginated (number, optional): The number of items per page for pagination.\n        \n    - page (number, optional): The page number for paginated results.\n        \n\n#### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status\": {\n            \"type\": \"boolean\"\n        },\n        \"code\": {\n            \"type\": \"number\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"data\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"id\": {\n                        \"type\": \"number\"\n                    },\n                    \"title\": {\n                        \"type\": \"string\"\n                    },\n                    \"description\": {\n                        \"type\": \"string\"\n                    },\n                    \"due_date\": {\n                        \"type\": \"string\"\n                    },\n                    \"status\": {\n                        \"type\": \"string\"\n                    },\n                    \"created_at\": {\n                        \"type\": \"string\"\n                    },\n                    \"updated_at\": {\n                        \"type\": \"string\"\n                    },\n                    \"user_id\": {\n                        \"type\": \"number\"\n                    }\n                }\n            }\n        },\n        \"pagination_details\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"current_page\": {\n                    \"type\": \"number\"\n                },\n                \"next_page_url\": {\n                    \"type\": \"string\"\n                },\n                \"path\": {\n                    \"type\": \"string\"\n                },\n                \"per_page\": {\n                    \"type\": \"number\"\n                },\n                \"prev_page_url\": {\n                    \"type\": \"string\"\n                },\n                \"to\": {\n                    \"type\": \"number\"\n                },\n                \"total\": {\n                    \"type\": \"number\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/v1/tasks/user",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"tasks",
+										"user"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:49:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"title\": \"Itaque aut aut tempore sint laudantium.\",\n            \"description\": \"Sunt et quae aut provident dolorem tenetur iure. Similique dignissimos ex cum id dicta.\",\n            \"due_date\": \"2024-12-06T16:12:21.000000Z\",\n            \"status\": \"cancelled\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 29,\n            \"title\": \"Dolores aspernatur earum tenetur quia enim culpa.\",\n            \"description\": \"Vero temporibus odit eveniet. Nihil consequuntur eum totam voluptas. Aut dolorem cum nemo rerum ut voluptas excepturi. Architecto qui nostrum eos temporibus sit iure.\",\n            \"due_date\": \"2024-12-02T22:19:59.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 55,\n            \"title\": \"Consequatur reprehenderit ducimus excepturi omnis.\",\n            \"description\": \"Sunt et optio et unde in animi. Perferendis delectus odit beatae qui qui veritatis dicta. Eum possimus voluptatem atque explicabo et quo id dolores. Dolorum autem fugit et ut. Veniam ut tempore consequuntur a eum.\",\n            \"due_date\": \"2024-12-01T12:46:56.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 56,\n            \"title\": \"Dolores iusto facere hic in.\",\n            \"description\": \"Maxime dolore est iure quas voluptate quo sunt. Harum dolores hic qui. Maxime consequatur est consectetur rem voluptatem in sed. Occaecati veritatis quam voluptate dolorem voluptatem consectetur corrupti dignissimos.\",\n            \"due_date\": \"2024-12-06T19:40:39.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 65,\n            \"title\": \"Quis velit qui dolorum iusto.\",\n            \"description\": \"Mollitia quas itaque sint. Minima ut nisi rerum.\",\n            \"due_date\": \"2024-12-06T10:15:31.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 66,\n            \"title\": \"Ipsa ut velit velit molestias at.\",\n            \"description\": \"Magnam consequatur nihil magni voluptas veniam sint quibusdam. Aliquid totam rerum consequatur at. Et cupiditate aut assumenda nemo. In delectus ducimus assumenda tempore aut vel illo magni.\",\n            \"due_date\": \"2024-12-04T16:59:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 68,\n            \"title\": \"Reiciendis dolorum quia accusamus.\",\n            \"description\": \"Vel magnam nisi consequatur aut sit. Quasi pariatur omnis possimus repellat quidem dolorum omnis eos.\",\n            \"due_date\": \"2024-12-03T01:20:49.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 100,\n            \"title\": \"Occaecati facilis occaecati sunt voluptas dolores est.\",\n            \"description\": \"Modi possimus dolorem maiores quis voluptas. Officia ex sed adipisci ut accusamus sunt. Laudantium temporibus debitis quod quae vel voluptatum. Ullam eligendi libero qui voluptatibus.\",\n            \"due_date\": \"2024-12-07T03:47:39.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 112,\n            \"title\": \"Eaque sint ullam est minima et aspernatur quo fugiat.\",\n            \"description\": \"Voluptas quis eos debitis ut in aperiam id. Laborum odit corrupti non. Nostrum est accusamus eos veniam est aspernatur.\",\n            \"due_date\": \"2024-12-03T22:26:37.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 113,\n            \"title\": \"Sed quo officia magni quia sit aut.\",\n            \"description\": \"At provident commodi officia doloribus eos. Nobis est magnam facere officiis. Id in aut doloremque et consequatur omnis et. Ut quae incidunt rerum consequatur laboriosam et deserunt.\",\n            \"due_date\": \"2024-12-03T05:23:51.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 131,\n            \"title\": \"Eos et eos nulla in labore alias porro.\",\n            \"description\": \"Ipsam neque eos cupiditate aut quis. Temporibus sint quas dicta consequuntur ad. Earum aut officia delectus qui.\",\n            \"due_date\": \"2024-11-30T20:38:44.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 133,\n            \"title\": \"Nostrum rerum est ipsum explicabo et dicta voluptatem.\",\n            \"description\": \"Pariatur non ut unde. Ex maiores corporis corrupti est. Reprehenderit error autem magni est. Veniam consequatur modi corporis id quaerat et. Consequatur id est ea dolor perspiciatis.\",\n            \"due_date\": \"2024-12-02T15:56:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 166,\n            \"title\": \"Debitis culpa fuga delectus quo optio minus autem.\",\n            \"description\": \"Nisi molestias rerum quo voluptas enim qui adipisci. Nihil repudiandae sapiente ut asperiores impedit et minima. Aut sed quasi tenetur fuga.\",\n            \"due_date\": \"2024-12-06T01:31:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 173,\n            \"title\": \"Et assumenda quam error illo velit minima cumque.\",\n            \"description\": \"Animi vel odio maxime minus consequatur. Suscipit consequatur nihil quam esse adipisci quod voluptas. In soluta dolorum numquam tempora autem dolor. Soluta quam earum animi voluptas nostrum numquam.\",\n            \"due_date\": \"2024-12-02T08:23:55.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 178,\n            \"title\": \"Non quod natus ullam eum.\",\n            \"description\": \"Qui enim sed corrupti consequatur enim neque quo a. Voluptas omnis voluptatibus velit quidem officiis nihil magni sint. Id ullam hic voluptas eius ut est expedita dignissimos. Labore quia recusandae velit vero quia sit tempore.\",\n            \"due_date\": \"2024-12-02T10:58:06.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 222,\n            \"title\": \"Sed blanditiis et reprehenderit ut fuga.\",\n            \"description\": \"Labore temporibus ipsa quo quia accusamus dignissimos illum. Dolorem saepe quas sed occaecati.\",\n            \"due_date\": \"2024-12-02T05:31:29.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 224,\n            \"title\": \"Adipisci quam sed aperiam a mollitia.\",\n            \"description\": \"Ad quibusdam delectus ullam illum eius cupiditate voluptas in. Officia id autem atque rerum reprehenderit autem. Qui omnis deleniti commodi deleniti labore provident.\",\n            \"due_date\": \"2024-12-06T15:34:52.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 236,\n            \"title\": \"Voluptatem et et consequuntur sed at.\",\n            \"description\": \"Adipisci pariatur exercitationem quasi quia vitae et error. Veniam provident veritatis neque quae at. Officia quas necessitatibus ut omnis praesentium eveniet. Dolores minima reiciendis rerum excepturi delectus praesentium.\",\n            \"due_date\": \"2024-12-03T13:42:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 250,\n            \"title\": \"Dolorem delectus veniam ducimus aperiam minima.\",\n            \"description\": \"Asperiores rerum iste sequi consequuntur beatae similique illum. Fugit harum quasi veniam quia at pariatur odio. Illum et nesciunt architecto at.\",\n            \"due_date\": \"2024-12-04T03:40:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 261,\n            \"title\": \"Qui aperiam et aspernatur eaque et rerum doloribus.\",\n            \"description\": \"Sapiente illum laborum deleniti cum eaque ut dolor. Nihil dolorem dolorem molestiae dolores. Cum praesentium ratione rem dolorem. Numquam voluptatem cum animi dignissimos molestiae est.\",\n            \"due_date\": \"2024-12-05T16:43:47.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 269,\n            \"title\": \"Illo possimus vero fuga sapiente.\",\n            \"description\": \"Delectus numquam quos ut dolorem quia earum et. Qui magni maiores quia ipsam laudantium est. Et ipsam vitae omnis doloremque et qui. Aliquam fuga blanditiis repudiandae ab dolores id.\",\n            \"due_date\": \"2024-12-02T12:54:15.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 280,\n            \"title\": \"In temporibus aliquam voluptatibus nam aut hic.\",\n            \"description\": \"Ipsa quo consequatur ipsum. Consectetur quod nulla natus aliquid. Ad eum minus illum magni quasi maxime officiis. Est dicta rerum qui enim sit est. Perferendis voluptatibus ex incidunt nobis ea.\",\n            \"due_date\": \"2024-12-01T01:15:10.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 295,\n            \"title\": \"Reprehenderit architecto libero quia qui vero beatae nisi ut.\",\n            \"description\": \"Ex ratione magnam est natus ullam. Quisquam hic rerum porro et qui maiores. Sint error voluptate cupiditate quos in. Odio officia nisi et non doloremque tempora.\",\n            \"due_date\": \"2024-11-30T15:16:37.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 318,\n            \"title\": \"Debitis laudantium possimus odio voluptatem et totam molestias.\",\n            \"description\": \"Consequatur nihil minima sunt cum eveniet corporis. Ad soluta necessitatibus reprehenderit recusandae est debitis. Amet totam quis vel veniam reprehenderit vero. Ut qui necessitatibus tempora tenetur.\",\n            \"due_date\": \"2024-11-30T06:23:24.000000Z\",\n            \"status\": \"cancelled\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 375,\n            \"title\": \"Iure voluptatibus quia fuga.\",\n            \"description\": \"Quidem et libero et voluptatibus odit quia. Et quos aut commodi eos ex iste qui.\",\n            \"due_date\": \"2024-12-02T01:30:57.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 412,\n            \"title\": \"Sit quis cumque eos aut facere dolor.\",\n            \"description\": \"Qui beatae qui placeat commodi dicta iste. Atque minus repudiandae quisquam ipsa ipsum iste libero qui. Nulla consequatur voluptate tempore id ipsa accusamus. Quidem porro ut autem quidem optio.\",\n            \"due_date\": \"2024-11-30T07:38:00.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 416,\n            \"title\": \"Suscipit fuga qui dolores voluptatum neque rem.\",\n            \"description\": \"Ut nam aliquid quibusdam sapiente sed nam suscipit suscipit. Totam esse est cum unde adipisci commodi quos. Aliquam adipisci aspernatur sit doloremque et.\",\n            \"due_date\": \"2024-12-07T00:43:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 426,\n            \"title\": \"Corporis eaque quia nemo consequatur.\",\n            \"description\": \"Et optio inventore voluptas et repudiandae nam consequatur. Ab sed est dicta quis. Quam sit est officia officiis libero eos voluptatibus.\",\n            \"due_date\": \"2024-12-04T21:30:27.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 430,\n            \"title\": \"Qui iusto quia eligendi et sit.\",\n            \"description\": \"Necessitatibus nemo numquam et quisquam enim rerum eum. Velit atque repudiandae impedit optio a velit. Eaque eligendi facilis facere officia aut id pariatur.\",\n            \"due_date\": \"2024-12-07T00:45:50.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 442,\n            \"title\": \"Quo debitis sit nesciunt deserunt assumenda.\",\n            \"description\": \"Mollitia est possimus consequatur sed. Rerum occaecati iusto totam dicta beatae. Dignissimos eum quo ratione quibusdam nihil nihil iusto tenetur.\",\n            \"due_date\": \"2024-12-05T08:09:31.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 484,\n            \"title\": \"Necessitatibus incidunt in totam suscipit.\",\n            \"description\": \"Praesentium exercitationem neque est est ipsa neque facilis voluptatem. Molestias et eos harum aut beatae non non earum. Quis voluptas rerum et temporibus totam est eligendi.\",\n            \"due_date\": \"2024-12-02T19:16:29.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 488,\n            \"title\": \"Ut voluptas consectetur ut facilis minus.\",\n            \"description\": \"Ut enim nesciunt quia sed voluptatem ratione eum. Sequi aut numquam reiciendis.\",\n            \"due_date\": \"2024-11-30T21:04:05.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 489,\n            \"title\": \"Et culpa molestiae ut molestiae.\",\n            \"description\": \"Non quae voluptatem laudantium. Qui animi illum reiciendis praesentium est. Voluptatem sit non iure et. Beatae vel quia quo.\",\n            \"due_date\": \"2024-12-05T00:29:32.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 495,\n            \"title\": \"Sint ex quia odio aliquid et eaque recusandae odit.\",\n            \"description\": \"Aliquam asperiores sunt tempore quo et animi. Corrupti in iusto sint aliquid alias eius itaque. Similique molestias omnis culpa et quia sunt suscipit soluta.\",\n            \"due_date\": \"2024-12-06T14:21:35.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:42.000000Z\",\n            \"user_id\": 1\n        }\n    ]\n}"
+						},
+						{
+							"name": "Success - Paginated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/user?paginated=10&page=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										"user"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size"
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:56:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": [\n        {\n            \"id\": 131,\n            \"title\": \"Eos et eos nulla in labore alias porro.\",\n            \"description\": \"Ipsam neque eos cupiditate aut quis. Temporibus sint quas dicta consequuntur ad. Earum aut officia delectus qui.\",\n            \"due_date\": \"2024-11-30T20:38:44.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 133,\n            \"title\": \"Nostrum rerum est ipsum explicabo et dicta voluptatem.\",\n            \"description\": \"Pariatur non ut unde. Ex maiores corporis corrupti est. Reprehenderit error autem magni est. Veniam consequatur modi corporis id quaerat et. Consequatur id est ea dolor perspiciatis.\",\n            \"due_date\": \"2024-12-02T15:56:21.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 166,\n            \"title\": \"Debitis culpa fuga delectus quo optio minus autem.\",\n            \"description\": \"Nisi molestias rerum quo voluptas enim qui adipisci. Nihil repudiandae sapiente ut asperiores impedit et minima. Aut sed quasi tenetur fuga.\",\n            \"due_date\": \"2024-12-06T01:31:29.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 173,\n            \"title\": \"Et assumenda quam error illo velit minima cumque.\",\n            \"description\": \"Animi vel odio maxime minus consequatur. Suscipit consequatur nihil quam esse adipisci quod voluptas. In soluta dolorum numquam tempora autem dolor. Soluta quam earum animi voluptas nostrum numquam.\",\n            \"due_date\": \"2024-12-02T08:23:55.000000Z\",\n            \"status\": \"over_due\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 178,\n            \"title\": \"Non quod natus ullam eum.\",\n            \"description\": \"Qui enim sed corrupti consequatur enim neque quo a. Voluptas omnis voluptatibus velit quidem officiis nihil magni sint. Id ullam hic voluptas eius ut est expedita dignissimos. Labore quia recusandae velit vero quia sit tempore.\",\n            \"due_date\": \"2024-12-02T10:58:06.000000Z\",\n            \"status\": \"pending\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 222,\n            \"title\": \"Sed blanditiis et reprehenderit ut fuga.\",\n            \"description\": \"Labore temporibus ipsa quo quia accusamus dignissimos illum. Dolorem saepe quas sed occaecati.\",\n            \"due_date\": \"2024-12-02T05:31:29.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 224,\n            \"title\": \"Adipisci quam sed aperiam a mollitia.\",\n            \"description\": \"Ad quibusdam delectus ullam illum eius cupiditate voluptas in. Officia id autem atque rerum reprehenderit autem. Qui omnis deleniti commodi deleniti labore provident.\",\n            \"due_date\": \"2024-12-06T15:34:52.000000Z\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 236,\n            \"title\": \"Voluptatem et et consequuntur sed at.\",\n            \"description\": \"Adipisci pariatur exercitationem quasi quia vitae et error. Veniam provident veritatis neque quae at. Officia quas necessitatibus ut omnis praesentium eveniet. Dolores minima reiciendis rerum excepturi delectus praesentium.\",\n            \"due_date\": \"2024-12-03T13:42:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 250,\n            \"title\": \"Dolorem delectus veniam ducimus aperiam minima.\",\n            \"description\": \"Asperiores rerum iste sequi consequuntur beatae similique illum. Fugit harum quasi veniam quia at pariatur odio. Illum et nesciunt architecto at.\",\n            \"due_date\": \"2024-12-04T03:40:22.000000Z\",\n            \"status\": \"in_progress\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        },\n        {\n            \"id\": 261,\n            \"title\": \"Qui aperiam et aspernatur eaque et rerum doloribus.\",\n            \"description\": \"Sapiente illum laborum deleniti cum eaque ut dolor. Nihil dolorem dolorem molestiae dolores. Cum praesentium ratione rem dolorem. Numquam voluptatem cum animi dignissimos molestiae est.\",\n            \"due_date\": \"2024-12-05T16:43:47.000000Z\",\n            \"status\": \"open\",\n            \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n            \"user_id\": 1\n        }\n    ],\n    \"pagination_details\": {\n        \"current_page\": 2,\n        \"next_page_url\": \"http://127.0.0.1:8000/api/v1/tasks?page=3\",\n        \"path\": \"http://127.0.0.1:8000/api/v1/tasks\",\n        \"per_page\": 10,\n        \"prev_page_url\": \"http://127.0.0.1:8000/api/v1/tasks?page=1\",\n        \"to\": 20,\n        \"total\": 34\n    }\n}"
+						},
+						{
+							"name": "Error - Unauthenticated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/user?paginated=10&page=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										"user"
+									],
+									"query": [
+										{
+											"key": "paginated",
+											"value": "10",
+											"description": "page size"
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"description": "number of page"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 16:57:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 401,\n    \"message\": \"Unauthenticated\",\n    \"errors\": {\n        \"type\": \"auth_error\",\n        \"message\": \"Check your credentials\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Task By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "The endpoint retrieves details of a specific task identified by its taskId.\n\n### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status\": {\n            \"type\": \"boolean\"\n        },\n        \"code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"title\": {\n                    \"type\": \"string\"\n                },\n                \"description\": {\n                    \"type\": \"string\"\n                },\n                \"due_date\": {\n                    \"type\": \"string\"\n                },\n                \"status\": {\n                    \"type\": \"string\"\n                },\n                \"created_at\": {\n                    \"type\": \"string\"\n                },\n                \"updated_at\": {\n                    \"type\": \"string\"\n                },\n                \"user_id\": {\n                    \"type\": \"integer\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:42:57 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Itaque aut aut tempore sint laudantium.\",\n        \"description\": \"Sunt et quae aut provident dolorem tenetur iure. Similique dignissimos ex cum id dicta.\",\n        \"due_date\": \"2024-12-06T16:12:21.000000Z\",\n        \"status\": \"cancelled\",\n        \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n        \"updated_at\": \"2024-11-30T05:25:41.000000Z\",\n        \"user_id\": 1\n    }\n}"
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:43:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 404,\n    \"message\": \"Not Found\",\n    \"errors\": [\n        {\n            \"type\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\NotFoundHttpException\",\n            \"message\": \"No query results for model [App\\\\Models\\\\Task] 2\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"status\": \"open\", // optional\r\n\r\n    \"title\": \"Task 1\",\r\n    \"description\": \"Lorem\",\r\n    \"due_date\": \"2025-11-20 09:10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks"
+							]
+						},
+						"description": "## Task Creation\n\nThis endpoint allows the creation of a new task.\n\n### Request Body\n\n- `title` (string, required): The title of the task.\n    \n- `description` (string, required): The description of the task.\n    \n- `due_date` (string, required): The due date and time for the task in the format \"YYYY-MM-DD HH:MM\".\n    \n- `status` (string, optional): The status of the task.\n    \n\nExample:\n\n``` json\n{\n  \"title\": \"Task 1\",\n  \"description\": \"Lorem\",\n  \"due_date\": \"2025-11-20 09:10\"\n}\n\n ```\n\n### Response\n\nThe response is in JSON format and includes the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"boolean\"\n    },\n    \"code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"description\": {\n          \"type\": \"string\"\n        },\n        \"due_date\": {\n          \"type\": \"string\"\n        },\n        \"status\": {\n          \"type\": \"string\"\n        },\n        \"created_at\": {\n          \"type\": \"string\"\n        },\n        \"updated_at\": {\n          \"type\": \"string\"\n        },\n        \"user_id\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Task 1\",\r\n    \"description\": \"Lorem\",\r\n    \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:11:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 502,\n        \"title\": \"Task 1\",\n        \"description\": \"Lorem\",\n        \"due_date\": \"2025-11-20T09:10:00.000000Z\",\n        \"status\": \"open\",\n        \"created_at\": \"2024-11-30T18:11:46.000000Z\",\n        \"updated_at\": \"2024-11-30T18:11:46.000000Z\",\n        \"user_id\": 1\n    }\n}"
+						},
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"title\": \"Task 1\",\r\n    // \"description\": \"Lorem\",\r\n    // \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:12:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"title\": [\n            \"The title field is required.\"\n        ],\n        \"description\": [\n            \"The description field is required.\"\n        ],\n        \"due_date\": [\n            \"The due date field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Assign Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"status\": \"open\", // optional\r\n\r\n    \"title\": \"Task 1\",\r\n    \"description\": \"Lorem\",\r\n    \"due_date\": \"2025-11-20 09:10\",\r\n    \"user_email\": \"test1@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/assign",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks",
+								"assign"
+							]
+						},
+						"description": "### Assign Task\n\nThis endpoint allows the assignment of a new task to a user.\n\n#### Request\n\n- Method: POST\n    \n- Endpoint: {{baseUrl}}/{{apiPrefixVersion}}/tasks/assign\n    \n\n##### Request Body\n\n- title (text, required): The title of the task.\n    \n- description (text, required): The description of the task.\n    \n- due_date (text, required): The due date and time for the task.\n    \n- user_email (text, required): The email of the user to whom the task is assigned.\n    \n\n#### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"boolean\"\n    },\n    \"code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"description\": {\n          \"type\": \"string\"\n        },\n        \"due_date\": {\n          \"type\": \"string\"\n        },\n        \"status\": {\n          \"type\": \"string\"\n        },\n        \"created_at\": {\n          \"type\": \"string\"\n        },\n        \"updated_at\": {\n          \"type\": \"string\"\n        },\n        \"user_id\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Task 1\",\r\n    \"description\": \"Lorem\",\r\n    \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:11:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 502,\n        \"title\": \"Task 1\",\n        \"description\": \"Lorem\",\n        \"due_date\": \"2025-11-20T09:10:00.000000Z\",\n        \"status\": \"open\",\n        \"created_at\": \"2024-11-30T18:11:46.000000Z\",\n        \"updated_at\": \"2024-11-30T18:11:46.000000Z\",\n        \"user_id\": 1\n    }\n}"
+						},
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"title\": \"Task 1\",\r\n    // \"description\": \"Lorem\",\r\n    // \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:12:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"title\": [\n            \"The title field is required.\"\n        ],\n        \"description\": [\n            \"The description field is required.\"\n        ],\n        \"due_date\": [\n            \"The due date field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"status\": \"open\",            // optional\r\n\r\n    \"title\": \"Task 1\",              // optional\r\n    \"description\": \"Lorem\",         // optional\r\n    \"due_date\": \"2025-11-20 09:10\"  // optional\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "### Update Task Details\n\nThis endpoint is used to update the details of a specific task.\n\n#### Request\n\n- Method: PATCH\n    \n- Endpoint: `{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId`\n    \n- { \"title\": \"Task 1\", // optional \"description\": \"Lorem\", // optional \"due_date\": \"2025-11-20 09:10\" // optional}\n    \n\n#### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"boolean\"\n    },\n    \"code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"description\": {\n          \"type\": \"string\"\n        },\n        \"due_date\": {\n          \"type\": \"string\"\n        },\n        \"status\": {\n          \"type\": \"string\"\n        },\n        \"created_at\": {\n          \"type\": \"string\"\n        },\n        \"updated_at\": {\n          \"type\": \"string\"\n        },\n        \"user_id\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"status\": \"open\", // optional\r\n\r\n    \"title\": \"Task 2\",\r\n    \"description\": \"Lorem\",\r\n    \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:47:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"code\": 200,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Task 2\",\n        \"description\": \"Lorem\",\n        \"due_date\": \"2025-11-20T09:10:00.000000Z\",\n        \"status\": \"open\",\n        \"created_at\": \"2024-11-30T05:25:41.000000Z\",\n        \"updated_at\": \"2024-11-30T18:47:20.000000Z\",\n        \"user_id\": 1\n    }\n}"
+						},
+						{
+							"name": "Error - Validation",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"status\": \"open\", // optional\r\n\r\n    // \"title\": \"Task 2\",\r\n    // \"description\": \"Lorem\",\r\n    // \"due_date\": \"2025-11-20 09:10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:47:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 422,\n    \"message\": \"Validation Error\",\n    \"errors\": {\n        \"title\": [\n            \"The title field is required.\"\n        ],\n        \"description\": [\n            \"The description field is required.\"\n        ],\n        \"due_date\": [\n            \"The due date field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefixVersion}}",
+								"tasks",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "### Delete Task\n\nThis endpoint is used to delete a specific task identified by its unique taskId.\n\n#### Request\n\n- Method: DELETE\n    \n- Endpoint: `{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId`\n    \n\n#### Response\n\nThe response for this request is in JSON format and follows the schema below:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"boolean\"\n    },\n    \"code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"type\": {\n            \"type\": \"string\"\n          },\n          \"message\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}\n\n ```\n\nThe response will have a status code of 404 if the task with the specified taskId is not found."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 18:59:08 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{apiPrefixVersion}}/tasks/:taskId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{apiPrefixVersion}}",
+										"tasks",
+										":taskId"
+									],
+									"variable": [
+										{
+											"key": "taskId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.23"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Nov 2024 19:00:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"code\": 404,\n    \"message\": \"Not Found\",\n    \"errors\": [\n        {\n            \"type\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\NotFoundHttpException\",\n            \"message\": \"No query results for model [App\\\\Models\\\\Task] 1\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.addHeader(\"Accept: application/json\");\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiPrefixVersion",
+			"value": "api/v1",
+			"type": "string"
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
